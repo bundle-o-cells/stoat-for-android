@@ -105,6 +105,7 @@ import chat.stoat.screens.chat.ChatRouterDestination
 import chat.stoat.screens.chat.LocalIsConnected
 import chat.stoat.sheets.ChannelContextSheet
 import chat.stoat.ui.theme.FragmentMono
+import chat.stoat.BuildConfig
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
@@ -463,22 +464,23 @@ fun ChannelSideDrawer(
                     )
                 }
             }
-
-            item(key = "discover") {
-                Box(
-                    Modifier
-                        .padding(8.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            topNav.navigate("discover")
-                        }
-                        .size(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_explore_24dp),
-                        contentDescription = stringResource(R.string.discover_alt)
-                    )
+            if (BuildConfig.SHOW_DISCOVER) {
+                item(key = "discover") {
+                    Box(
+                        Modifier
+                            .padding(8.dp)
+                            .clip(CircleShape)
+                            .clickable {
+                                topNav.navigate("discover")
+                            }
+                            .size(48.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_explore_24dp),
+                            contentDescription = stringResource(R.string.discover_alt)
+                        )
+                    }
                 }
             }
 

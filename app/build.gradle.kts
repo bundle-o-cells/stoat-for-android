@@ -3,6 +3,7 @@ import io.sentry.android.gradle.instrumentation.logcat.LogcatLevel
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
+import java.net.URI
 
 plugins {
     alias(libs.plugins.android.application)
@@ -60,15 +61,39 @@ android {
     namespace = "chat.stoat"
 
     defaultConfig {
-        applicationId = "chat.revolt"
+        applicationId = buildproperty("build.application_id", "HARDCAST_APP_ID")
+            ?: error("Missing 'build.application_id' in stoatbuild.properties")
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = Integer.parseInt("001_007_002".replace("_", ""), 10)
         versionName = "1.7.2"
 
+        buildConfigField(
+            "boolean",
+            "SHOW_DISCOVER",
+            (buildproperty("build.show_discover", "HARDCAST_SHOW_DISCOVER") ?: "true")
+                .toBoolean().toString()
+        )
+
+        manifestPlaceholders["webHost"] = URI(
+            buildproperty("hosts.app", "HARDCAST_APP")
+                ?: error("Missing 'hosts.app' in stoatbuild.properties")
+        ).host ?: error("'hosts.app' must be a full URL, e.g. https://stoat.chat")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+
+    signingConfigs {
+        buildproperty("signing.store_file", "HARDCAST_SIGNING_STORE_FILE")?.let { path ->
+            create("release") {
+                storeFile = file(path)
+                storePassword = buildproperty("signing.store_password", "HARDCAST_SIGNING_STORE_PASSWORD")
+                keyAlias = buildproperty("signing.key_alias", "HARDCAST_SIGNING_KEY_ALIAS")
+                keyPassword = buildproperty("signing.key_password", "HARDCAST_SIGNING_KEY_PASSWORD")
+            }
         }
     }
 
@@ -80,6 +105,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            resValue(
+                "string",
+                "app_name",
+                buildproperty("build.app_name", "HARDCAST_APP_NAME")
+                    ?: error("Missing 'build.app_name' in stoatbuild.properties")
+            )
             buildConfigField(
                 "String",
                 "SENTRY_DSN",
@@ -90,6 +121,7 @@ android {
                 "FLAVOUR_ID",
                 "\"${buildproperty("build.flavour_id", "RVX_BUILD_FLAVOUR_ID")}\""
             )
+            signingConfig = signingConfigs.findByName("release")
         }
 
         debug {
@@ -113,6 +145,13 @@ android {
                 "FLAVOUR_ID",
                 "\"${buildproperty("build.flavour_id", "RVX_BUILD_FLAVOUR_ID")}\""
             )
+        }
+    }
+    buildproperty("build.branding_res_dir", "HARDCAST_BRANDING_RES_DIR")?.let { dir ->
+        val brandingRes = rootProject.file(dir)
+        sourceSets {
+            getByName("debug").res.directories.add(brandingRes.path)
+            getByName("release").res.directories.add(brandingRes.path)
         }
     }
     compileOptions {

@@ -46,6 +46,7 @@ android {
         buildConfigField("String", "HOST_AUTUMN",  "\"${host("hosts.autumn",  "HARDCAST_AUTUMN")}\"")
         buildConfigField("String", "HOST_JANUARY", "\"${host("hosts.january", "HARDCAST_JANUARY")}\"")
         buildConfigField("String", "HOST_APP",     "\"${host("hosts.app",     "HARDCAST_APP")}\"")
+        buildConfigField("String", "HOST_INVITES", "\"${host("hosts.invites", "HARDCAST_INVITES")}\"")
     }
 
     compileOptions {

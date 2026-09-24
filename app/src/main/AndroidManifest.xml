@@ -96,7 +96,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="https" />
-                <data android:host="stoat.chat" />
+                <data android:host="${webHost}" />
                 <data android:pathPattern="/channel/.........................." />
                 <data android:pathPattern="/channel/........................../.........................." />
                 <data android:pathPattern="/server/.........................." />
@@ -109,7 +109,7 @@
             android:name=".activities.InviteActivity"
             android:theme="@style/Theme.Stoat"
             android:exported="true">
-            <!-- Revolt invite links -->
+            <!-- Assumes hosts.invites = <hosts.app>/invite. Parameterize if that changes. -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -119,57 +119,9 @@
                 <data android:scheme="http" />
                 <data android:scheme="https" />
 
-                <data android:host="app.revolt.chat" />
+                <data android:host="${webHost}" />
 
                 <data android:pathPrefix="/invite/" />
-            </intent-filter>
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-
-                <data android:host="rvlt.gg" />
-
-                <uri-relative-filter-group
-                    android:allow="false"
-                    tools:targetApi="35">
-                    <data android:pathPrefix="/discover/" />
-                </uri-relative-filter-group>
-            </intent-filter>
-            <!-- Stoat invite links -->
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-
-                <data android:host="stoat.chat" />
-
-                <data android:pathPrefix="/invite/" />
-            </intent-filter>
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-
-                <data android:host="stt.gg" />
-
-                <uri-relative-filter-group
-                    android:allow="false"
-                    tools:targetApi="35">
-                    <data android:pathPrefix="/discover/" />
-                </uri-relative-filter-group>
             </intent-filter>
         </activity>
 
